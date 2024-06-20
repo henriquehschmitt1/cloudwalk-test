@@ -27,13 +27,18 @@ class QuakeService {
         currentGame = new QuakeGame();
       }
       if (line.includes("Kill:")) {
-        this.killLog(currentGame, line);
+        this.createGameLog(currentGame, line);
       }
     }
     return matches;
   }
 
-  killLog(currentGame, line) {
+  createGameLog(currentGame, line) {
+    const { killerName, victimName } = this.getPlayersNames(line);
+    this.addCurrentGameInfos(killerName, victimName, currentGame);
+  }
+
+  getPlayersNames(line) {
     const indexKilled = line.indexOf("killed");
     const indexBy = line.indexOf("by");
     const startIndex = line.lastIndexOf(":", indexKilled - 2) + 2;
@@ -41,16 +46,19 @@ class QuakeService {
     const victimName = line
       .substring(indexKilled + "killed".length, indexBy)
       .trim();
-    this.countKills(killerName, victimName, currentGame);
+    return { killerName, victimName };
   }
 
-  countKills(killerName, victimName, currentGame) {
+  addCurrentGameInfos(killerName, victimName, currentGame) {
     if (killerName !== "\u003Cworld\u003E") {
       currentGame.addPlayer(killerName);
       currentGame.addPlayer(victimName);
-      currentGame.increaseKillByOne(killerName);
+      if (killerName !== victimName) {
+        currentGame.increaseKillByOne(killerName);
+      }
     }
     if (killerName === "\u003Cworld\u003E") {
+      currentGame.addPlayer(victimName);
       currentGame.decreaseKillByOne(victimName);
     }
   }
