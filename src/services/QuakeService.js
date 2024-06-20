@@ -41,10 +41,10 @@ class QuakeService {
     const victimName = line
       .substring(indexKilled + "killed".length, indexBy)
       .trim();
-    this.wasKilledByWorld(killerName, victimName, currentGame);
+    this.countKills(killerName, victimName, currentGame);
   }
 
-  wasKilledByWorld(killerName, victimName, currentGame) {
+  countKills(killerName, victimName, currentGame) {
     if (killerName !== "\u003Cworld\u003E") {
       currentGame.addPlayer(killerName);
       currentGame.addPlayer(victimName);
