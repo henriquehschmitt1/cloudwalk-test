@@ -53,9 +53,9 @@ class QuakeService {
     if (killerName !== "\u003Cworld\u003E") {
       currentGame.addPlayer(killerName);
       currentGame.addPlayer(victimName);
-      if (killerName !== victimName) {
-        currentGame.increaseKillByOne(killerName);
-      }
+      // if (killerName !== victimName) {
+      currentGame.increaseKillByOne(killerName);
+      // }
     }
     if (killerName === "\u003Cworld\u003E") {
       currentGame.addPlayer(victimName);
