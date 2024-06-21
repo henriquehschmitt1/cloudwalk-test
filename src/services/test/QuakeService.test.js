@@ -31,7 +31,7 @@ describe("QuakeService", () => {
     expect(currentGame.players).toEqual(["Killer", "Victim"]);
   });
 
-  it("Should not add killer name and decrease victims kill by 1 and increase total kills by 1", () => {
+  it("Should not add killer name, decrease victims kill by 1 and increase total kills by 1", () => {
     const currentGame = new QuakeGameMockBuilder().withKills().build();
 
     quakeService.addPlayersInfos(
@@ -44,6 +44,21 @@ describe("QuakeService", () => {
     expect(currentGame.kills["\u003Cworld\u003E"]).toBeFalsy();
     expect(currentGame.kills["player3"]).toBe(8);
     expect(currentGame.players).toEqual(["player1", "player2", "player3"]);
+  });
+
+  it("Should not add killer name, not decrease player kill as its already 0 and increase total kills by 1", () => {
+    const currentGame = new QuakeGameMockBuilder().withZeroKills().build();
+
+    quakeService.addPlayersInfos(
+      "\u003Cworld\u003E",
+      "player1",
+      "MOD_TRIGGER_HURT",
+      currentGame,
+    );
+    expect(currentGame.totalKills).toBe(1);
+    expect(currentGame.kills["\u003Cworld\u003E"]).toBeFalsy();
+    expect(currentGame.kills["player1"]).toBe(0);
+    expect(currentGame.players).toEqual(["player1"]);
   });
 
   it("Should correctly return killerName, victimName and weaponName based on a line of the quake game log", () => {
