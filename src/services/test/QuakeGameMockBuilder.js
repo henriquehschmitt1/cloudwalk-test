@@ -15,6 +15,14 @@ class QuakeGameMockBuilder extends QuakeGame {
     return this;
   }
 
+  withZeroKills() {
+    this.kills = {
+      player1: 0,
+    };
+    this.players = ["player1"];
+    return this;
+  }
+
   build() {
     return this;
   }
