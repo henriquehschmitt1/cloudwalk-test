@@ -1,7 +1,7 @@
 import fs from "fs";
 import readline from "readline";
 import path from "path";
-import QuakeGame from "../model/QuakeGame.js";
+import QuakeGame from "../entity/QuakeGameEntity.js";
 
 const FILE_PATH = path.resolve(
   new URL("../quakeLog/qgames.log", import.meta.url).pathname,
