@@ -1,19 +1,30 @@
 class QuakeGame {
   constructor() {
     this.totalKills = 0;
-    this.players = new Map();
+    this.players = [];
+    this.killsByMeans = {};
     this.kills = {};
   }
 
   addPlayer(playerName) {
-    if (!this.players.has(playerName)) {
-      this.players.set(playerName, true);
+    if (!this.players.includes(playerName)) {
+      this.players.push(playerName);
       this.kills[playerName] = 0;
     }
   }
 
+  addWeapon(weapon) {
+    if (!this.killsByMeans[weapon]) {
+      this.killsByMeans[weapon] = 0;
+    }
+  }
+
+  increaseWeaponKill(weapon) {
+    this.killsByMeans[weapon] += 1;
+  }
+
   removePlayer(playerName) {
-    if (this.players.has(playerName)) {
+    if (this.players.includes(playerName)) {
       this.players.delete(playerName);
       delete this.kills[playerName];
     }

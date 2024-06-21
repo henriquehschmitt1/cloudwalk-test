@@ -20,8 +20,6 @@ class QuakeService {
     for await (const line of lines) {
       if (line.includes("InitGame:")) {
         if (currentGame) {
-          //gambiarra, arrumar dps
-          currentGame.players = currentGame.getPlayersAsArray();
           matches.push(currentGame);
         }
         currentGame = new QuakeGame();
@@ -34,8 +32,8 @@ class QuakeService {
   }
 
   createGameLog(currentGame, line) {
-    const { killerName, victimName } = this.getPlayersNames(line);
-    this.addCurrentGameInfos(killerName, victimName, currentGame);
+    const { killerName, victimName, weaponName } = this.getPlayersNames(line);
+    this.addPlayersInfos(killerName, victimName, weaponName, currentGame);
   }
 
   getPlayersNames(line) {
@@ -46,10 +44,11 @@ class QuakeService {
     const victimName = line
       .substring(indexKilled + "killed".length, indexBy)
       .trim();
-    return { killerName, victimName };
+    const weaponName = line.substring(indexBy + 3).trim();
+    return { killerName, victimName, weaponName };
   }
 
-  addCurrentGameInfos(killerName, victimName, currentGame) {
+  addPlayersInfos(killerName, victimName, weaponName, currentGame) {
     if (killerName !== "\u003Cworld\u003E") {
       currentGame.addPlayer(killerName);
       currentGame.addPlayer(victimName);
@@ -61,6 +60,12 @@ class QuakeService {
       currentGame.addPlayer(victimName);
       currentGame.decreaseKillByOne(victimName);
     }
+    this.addWeaponsInfos(weaponName, currentGame);
+  }
+
+  addWeaponsInfos(weaponName, currentGame) {
+    currentGame.addWeapon(weaponName);
+    currentGame.increaseWeaponKill(weaponName);
   }
 }
 
