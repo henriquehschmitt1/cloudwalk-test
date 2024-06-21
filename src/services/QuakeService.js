@@ -20,6 +20,7 @@ class QuakeService {
     for await (const line of lines) {
       if (line.includes("InitGame:")) {
         if (currentGame) {
+          this.killsToRanking(currentGame);
           matches.push(currentGame);
         }
         currentGame = new QuakeGame();
@@ -32,11 +33,11 @@ class QuakeService {
   }
 
   createGameLog(currentGame, line) {
-    const { killerName, victimName, weaponName } = this.getPlayersNames(line);
+    const { killerName, victimName, weaponName } = this.getNames(line);
     this.addPlayersInfos(killerName, victimName, weaponName, currentGame);
   }
 
-  getPlayersNames(line) {
+  getNames(line) {
     const indexKilled = line.indexOf("killed");
     const indexBy = line.indexOf("by");
     const startIndex = line.lastIndexOf(":", indexKilled - 2) + 2;
@@ -66,6 +67,16 @@ class QuakeService {
   addWeaponsInfos(weaponName, currentGame) {
     currentGame.addWeapon(weaponName);
     currentGame.increaseWeaponKill(weaponName);
+  }
+
+  killsToRanking(currentGame) {
+    const killsAsArray = Object.entries(currentGame.kills);
+    killsAsArray.sort((playerA, playerB) => playerB[1] - playerA[1]);
+    const sortedKills = {};
+    killsAsArray.forEach(([player, kills]) => {
+      sortedKills[player] = kills;
+    });
+    currentGame.kills = sortedKills;
   }
 }
 
