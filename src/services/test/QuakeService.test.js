@@ -68,4 +68,9 @@ describe("QuakeService", () => {
     expect(currentGame.kills["Isgalamido"]).toBe(1);
     expect(currentGame.kills["Assasinu Credi"]).toBe(0);
   });
+
+  it("Should create a matches log and return it", async () => {
+    const matches = await quakeService.parseLog();
+    expect(matches.length).toBe(20);
+  });
 });
